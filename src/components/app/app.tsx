@@ -1,12 +1,25 @@
+import { useState } from 'react';
+import { Parameter } from '@/domain/parameter';
 import { useConfig } from '../config-provider';
 import { useGetParametersByUser } from '../parameter-service-provider';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Checkbox } from '@/components/ui/checkbox';
 
 function App() {
   const { userId } = useConfig();
 
   const parametersFetchingState = useGetParametersByUser(userId);
+
+  const [selectedParameters, setSelectedParameters] = useState<Parameter[]>([]);
+
+  const toggleSelection = (parameter: Parameter) => {
+    setSelectedParameters((prev) =>
+      prev.find((p) => p.name === parameter.name)
+        ? prev.filter((p) => p.name !== parameter.name)
+        : [...prev, parameter],
+    );
+  };
 
   return (
     <>
@@ -21,9 +34,17 @@ function App() {
                 <CommandEmpty>No results found.</CommandEmpty>
               ) : (
                 <CommandGroup heading="Parameters">
-                  {parametersFetchingState.data.map((parameter) => (
-                    <CommandItem key={parameter.name}>{parameter.name}</CommandItem>
-                  ))}
+                  {parametersFetchingState.data.map((parameter) => {
+                    const isSelected = selectedParameters.some((p) => p.id === parameter.id);
+
+                    return (
+                      <CommandItem key={parameter.name} onSelect={() => toggleSelection(parameter)}>
+                        <Checkbox checked={isSelected} />
+
+                        {parameter.name}
+                      </CommandItem>
+                    );
+                  })}
                 </CommandGroup>
               )}
             </CommandList>
