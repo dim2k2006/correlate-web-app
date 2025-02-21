@@ -3,8 +3,9 @@ import { Parameter } from '@/domain/parameter';
 import { useConfig } from '../config-provider';
 import { useGetParametersByUser } from '../parameter-service-provider';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
+import { LoadingPlaceholder } from '@/components/loading-placeholder';
+import { Chart } from '@/components/chart';
 
 function App() {
   const { userId } = useConfig();
@@ -65,27 +66,15 @@ function App() {
         <div className="w-full p-4">
           <h2 className="text-xl font-bold mb-4">Charts</h2>
           {selectedParameters.map((parameter) => (
-            <div key={parameter.id} className="border border-gray-300 rounded p-4 mb-4">
+            <div key={parameter.id} className="mb-4">
               <h3 className="text-lg font-semibold mb-2">{parameter.name}</h3>
-              <div className="h-64 bg-gray-100 flex items-center justify-center">
-                {/* Chart placeholder */}
-                Chart for {parameter.name} goes here.
-              </div>
+
+              <Chart parameterId={parameter.id} />
             </div>
           ))}
         </div>
       )}
     </>
-  );
-}
-
-function LoadingPlaceholder() {
-  return (
-    <div className="space-y-2">
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-3/4" />
-      <Skeleton className="h-4 w-1/2" />
-    </div>
   );
 }
 
