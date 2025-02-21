@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { TelegramProvider } from '@/providers/telegram';
+import { useQuery } from '@tanstack/react-query';
 
 const TelegramProviderContext = createContext<TelegramProvider | null>(null);
 
@@ -12,7 +13,7 @@ const TelegramProviderProvider: React.FC<TelegramProviderProviderProps> = ({ pro
   return <TelegramProviderContext.Provider value={provider}>{children}</TelegramProviderContext.Provider>;
 };
 
-export function useConfig(): TelegramProvider {
+export function useTelegramProvider(): TelegramProvider {
   const ctx = useContext(TelegramProviderContext);
 
   if (!ctx) {
@@ -22,6 +23,16 @@ export function useConfig(): TelegramProvider {
   }
 
   return ctx;
+}
+
+export function useTelegramUser(initData: string) {
+  const telegramProvider = useTelegramProvider();
+
+  return useQuery({
+    queryKey: ['telegramUser', initData],
+    queryFn: () => telegramProvider.validateInitData(initData),
+    refetchOnWindowFocus: false,
+  });
 }
 
 export default TelegramProviderProvider;
