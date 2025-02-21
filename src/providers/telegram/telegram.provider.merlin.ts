@@ -32,7 +32,7 @@ class TelegramProviderMerlin implements TelegramProvider {
 
     try {
       const response = await this.client.post(url, {
-        data: JSON.stringify({ initData: data }),
+        data: { initData: data },
       });
 
       const result = UserResponseSchema.parse(response.data);
