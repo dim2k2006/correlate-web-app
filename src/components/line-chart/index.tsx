@@ -43,7 +43,7 @@ export function LineChart({ title, description, data }: LineChartProps) {
               tickMargin={8}
               tickFormatter={(value) => dayjs(value).format('MMM D')}
             />
-            <YAxis tickLine={false} axisLine={false} tickMargin={8} />
+            <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={['dataMin - 1', 'dataMax + 1']} />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Line dataKey="value" type="linear" stroke="var(--color-value)" strokeWidth={2} dot={false} />
           </LineChartComponent>
