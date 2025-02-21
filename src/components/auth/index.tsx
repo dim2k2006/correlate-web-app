@@ -1,22 +1,10 @@
 import React from 'react';
+import get from 'lodash/get';
 import { useTelegramUser } from '@/components/telegram-provider-provider';
 import { LoadingPlaceholder } from '@/components/loading-placeholder';
 
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp: {
-        initData: string;
-        // Other properties/methods can be added if needed.
-      };
-    };
-  }
-}
-
 export function Auth({ children }: AuthProps) {
-  const initData = window.Telegram?.WebApp?.initData ?? '';
-
-  alert('initData: ' + initData);
+  const initData = get(window, 'Telegram.WebApp.initData', '');
 
   const userFetchingState = useTelegramUser(initData);
 
