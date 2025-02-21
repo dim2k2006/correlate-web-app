@@ -1,4 +1,5 @@
 import { ParameterService, ParameterRepositoryCorrelate, ParameterServiceImpl } from '../domain/parameter';
+import { TelegramProvider, TelegramProviderMerlin } from '../providers/telegram';
 
 function getEnvVariable(name: string): string {
   const value = import.meta.env[name];
@@ -37,13 +38,17 @@ export function buildContainer(config: Config): Container {
 
   const parameterService = new ParameterServiceImpl({ parameterRepository });
 
+  const telegramProvider = new TelegramProviderMerlin({ baseUrl: config.telegramProviderBaseUrl });
+
   return {
     config,
     parameterService,
+    telegramProvider,
   };
 }
 
 export type Container = {
   config: Config;
   parameterService: ParameterService;
+  telegramProvider: TelegramProvider;
 };
