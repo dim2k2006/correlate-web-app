@@ -40,3 +40,17 @@
 .read-the-docs {
   color: #888;
 }
+
+.status {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.status-ok {
+  background: #61dafb;
+}
+
+.status-error {
+  background: #ff0000;
+}
