@@ -51,6 +51,21 @@ function App() {
           </Command>
         )}
       </div>
+
+      {selectedParameters.length > 0 && (
+        <div className="w-full p-4">
+          <h2 className="text-xl font-bold mb-4">Charts</h2>
+          {selectedParameters.map((parameter) => (
+            <div key={parameter.id} className="border border-gray-300 rounded p-4 mb-4">
+              <h3 className="text-lg font-semibold mb-2">{parameter.name}</h3>
+              <div className="h-64 bg-gray-100 flex items-center justify-center">
+                {/* Chart placeholder */}
+                Chart for {parameter.name} goes here.
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
