@@ -1,40 +1,46 @@
-import './App.css';
 import { useConfig } from '../config-provider';
 import { useGetParametersByUser } from '../parameter-service-provider';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Skeleton } from '@/components/ui/skeleton';
 
 function App() {
   const { userId } = useConfig();
 
   const parametersFetchingState = useGetParametersByUser(userId);
 
-  console.log('parametersFetchingState', parametersFetchingState.data);
-
-  const parameters = parametersFetchingState.data ?? [];
-
   return (
     <>
-      <div className="w-full">
-        <Command>
-          <CommandInput placeholder="Type a command or search..." />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+      <div className="w-full p-4">
+        {parametersFetchingState.isLoading && <LoadingPlaceholder />}
 
-            <CommandGroup heading="Parameters">
-              {parameters.map((parameter) => (
-                <CommandItem>{parameter.name}</CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </div>
-
-      <div>
-        {parametersFetchingState.isSuccess && <div className="status status-ok" />}
-
-        {parametersFetchingState.isError && <div className="status status-error" />}
+        {parametersFetchingState.isSuccess && (
+          <Command>
+            <CommandInput placeholder="Type parameter name or search..." />
+            <CommandList>
+              {parametersFetchingState.data.length === 0 ? (
+                <CommandEmpty>No results found.</CommandEmpty>
+              ) : (
+                <CommandGroup heading="Parameters">
+                  {parametersFetchingState.data.map((parameter) => (
+                    <CommandItem key={parameter.name}>{parameter.name}</CommandItem>
+                  ))}
+                </CommandGroup>
+              )}
+            </CommandList>
+          </Command>
+        )}
       </div>
     </>
+  );
+}
+
+function LoadingPlaceholder() {
+  return (
+    <div className="space-y-2">
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-3/4" />
+      <Skeleton className="h-4 w-1/2" />
+    </div>
   );
 }
 
