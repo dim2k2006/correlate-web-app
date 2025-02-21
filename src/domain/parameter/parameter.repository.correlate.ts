@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
-import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 import { z } from 'zod';
 import set from 'lodash/set';
 import { Parameter, Measurement } from './parameter.model';
 import { ParameterRepository } from './parameter.repository';
-import { handleAxiosError } from '@/utils/axios';
+import { handleAxiosError } from '../../utils/axios';
 
 const ParameterResponseSchema = z.object({
   id: z.string(),
@@ -114,11 +114,10 @@ class ParameterRepositoryCorrelate implements ParameterRepository {
     };
   }
 
-  private computeHMAC(payload: string, timestamp: number) {
+  private computeHMAC(payload: string, timestamp: number): string {
     const message = `${payload}|${timestamp}`;
-    const hmac = crypto.createHmac('sha256', this.apiKey);
-    hmac.update(message);
-    return hmac.digest('base64');
+    const hmac = CryptoJS.HmacSHA256(message, this.apiKey);
+    return CryptoJS.enc.Base64.stringify(hmac);
   }
 }
 
