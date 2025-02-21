@@ -67,9 +67,11 @@ function App() {
           <h2 className="text-xl font-bold mb-4">Charts</h2>
           {selectedParameters.map((parameter) => (
             <div key={parameter.id} className="mb-4">
-              <h3 className="text-lg font-semibold mb-2">{parameter.name}</h3>
-
-              <Chart parameterId={parameter.id} />
+              <Chart
+                parameterId={parameter.id}
+                title={`${parameter.name}, ${parameter.unit}`}
+                description={parameter.description}
+              />
             </div>
           ))}
         </div>
