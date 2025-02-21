@@ -50,6 +50,15 @@ function App() {
             </CommandList>
           </Command>
         )}
+
+        {parametersFetchingState.isError && (
+          <div className="w-full p-4">
+            <div className="border border-red-400 bg-red-100 text-red-700 px-4 py-3 rounded">
+              <strong className="font-bold">Error:</strong>{' '}
+              <span>{parametersFetchingState.error?.message || 'An error occurred while fetching parameters.'}</span>
+            </div>
+          </div>
+        )}
       </div>
 
       {selectedParameters.length > 0 && (
