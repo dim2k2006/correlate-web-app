@@ -16,6 +16,8 @@ declare global {
 export function Auth({ children }: AuthProps) {
   const initData = window.Telegram?.WebApp?.initData ?? '';
 
+  alert('initData: ' + initData);
+
   const userFetchingState = useTelegramUser(initData);
 
   return (
