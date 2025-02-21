@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { z } from 'zod';
-import { TelegramProvider, TelegramUser } from './telegram.provider';
-import { handleAxiosError } from '../utils/axios';
+import { TelegramProvider, TelegramUser } from './telegram.provider.ts';
+import { handleAxiosError } from '../../utils/axios.ts';
 
 const UserResponseSchema = z.object({
   id: z.string(),
