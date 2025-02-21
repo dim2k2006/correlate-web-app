@@ -5,13 +5,17 @@ import { LoadingPlaceholder } from '@/components/loading-placeholder';
 
 export function Auth({ children }: AuthProps) {
   const initData = get(window, 'Telegram.WebApp.initData', '');
+  const initDataUnsafe = get(window, 'Telegram.WebApp.initDataUnsafe', {});
 
   const userFetchingState = useTelegramUser(initData);
 
   return (
     <div>
+      initData: {initData}
+      <br />
+      initDataUnsafe: {JSON.stringify(initDataUnsafe)}
+      <br />
       {userFetchingState.isLoading && <LoadingPlaceholder />}
-
       {userFetchingState.isError && (
         <div className="w-full p-4">
           <div className="border border-red-400 bg-red-100 text-red-700 px-4 py-3 rounded">
@@ -20,7 +24,6 @@ export function Auth({ children }: AuthProps) {
           </div>
         </div>
       )}
-
       {userFetchingState.isSuccess && children}
     </div>
   );
