@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Parameter } from '@/domain/parameter';
-import { useConfig } from '../config-provider';
+import { useUserId } from '@/components/user-id-provider';
 import { useGetParametersByUser } from '../parameter-service-provider';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -8,7 +8,7 @@ import { LoadingPlaceholder } from '@/components/loading-placeholder';
 import { Chart } from '@/components/chart';
 
 function App() {
-  const { userId } = useConfig();
+  const userId = useUserId();
 
   const parametersFetchingState = useGetParametersByUser(userId);
 
