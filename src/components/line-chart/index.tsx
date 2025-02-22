@@ -13,18 +13,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function LineChart({ title, description, data }: LineChartProps) {
-  const chartData = data.map((m) => {
-    const date = dayjs(m.timestamp);
+  const dailyData = aggregateDaily(data);
 
-    const formattedDate = date.format('YYYY-MM-DD');
-
-    return {
-      date: formattedDate,
-      value: m.value,
-    };
-  });
-
-  const trend = calculateTrend(data);
+  const trend = calculateTrend(dailyData);
 
   return (
     <Card>
@@ -34,7 +25,7 @@ export function LineChart({ title, description, data }: LineChartProps) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChartComponent accessibilityLayer data={chartData}>
+          <LineChartComponent accessibilityLayer data={dailyData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="date"
@@ -87,19 +78,14 @@ type DataItem = {
   notes?: string;
 };
 
-function calculateTrend(data: DataItem[]): number | null {
+function calculateTrend(data: AggregatedData[]): number | null {
   if (data.length < 2) {
     return null; // Not enough data to calculate a trend
   }
 
-  // 1. Sort measurements by timestamp (ascending order)
-  const sortedMeasurements = [...data].sort(
-    (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
-  );
-
   // 2. Extract the earliest and latest measurement values
-  const earliestValue = sortedMeasurements[0].value;
-  const latestValue = sortedMeasurements[sortedMeasurements.length - 1].value;
+  const earliestValue = data[0].value;
+  const latestValue = data[data.length - 1].value;
 
   // 3. Avoid division by zero (if earliestValue is 0, trend cannot be computed)
   if (earliestValue === 0) return null;
@@ -108,3 +94,36 @@ function calculateTrend(data: DataItem[]): number | null {
   const trendPercentage = ((latestValue - earliestValue) / earliestValue) * 100;
   return trendPercentage;
 }
+
+function aggregateDaily(data: DataItem[]): AggregatedData[] {
+  // Group measurements by date
+  const groupedByDate = data.reduce<Record<string, number[]>>((acc, item) => {
+    // Extract just the date (e.g., "2025-02-15")
+    const dateKey = dayjs(item.timestamp).format('YYYY-MM-DD');
+    if (!acc[dateKey]) {
+      acc[dateKey] = [];
+    }
+    acc[dateKey].push(item.value);
+    return acc;
+  }, {});
+
+  // For each date, compute the average of all values
+  const dailyData: AggregatedData[] = Object.entries(groupedByDate).map(([dateKey, values]) => {
+    const sum = values.reduce((acc, val) => acc + val, 0);
+    const avg = sum / values.length;
+    return {
+      date: dateKey,
+      value: avg,
+    };
+  });
+
+  // Sort the resulting array by date
+  dailyData.sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
+
+  return dailyData;
+}
+
+type AggregatedData = {
+  date: string; // "YYYY-MM-DD"
+  value: number;
+};
