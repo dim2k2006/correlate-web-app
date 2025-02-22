@@ -11,13 +11,11 @@ function getEnvVariable(name: string): string {
 
 export function buildConfig(): Config {
   const apiBaseUrl = getEnvVariable('VITE_API_BASE_URL');
-  const userId = getEnvVariable('VITE_USER_ID');
   const correlateApiKey = getEnvVariable('VITE_CORRELATE_API_KEY');
   const telegramProviderBaseUrl = getEnvVariable('VITE_TELEGRAM_PROVIDER_BASE_URL');
 
   return {
     apiBaseUrl,
-    userId,
     correlateApiKey,
     telegramProviderBaseUrl,
   };
@@ -25,7 +23,6 @@ export function buildConfig(): Config {
 
 export type Config = {
   apiBaseUrl: string;
-  userId: string;
   correlateApiKey: string;
   telegramProviderBaseUrl: string;
 };
